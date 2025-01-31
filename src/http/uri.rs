@@ -18,6 +18,19 @@ pub enum UriError {
     InvalidPort,
 }
 
+impl Uri {
+    pub fn get_addr(&self) -> String {
+        match self.port {
+            Some(port) => format!("{}:{}", self.hostname, port),
+            None => format!("{}:{}", self.hostname, self.protocol.get_default_port()),
+        }
+    }
+
+    pub fn get_encoded_path(&self) -> String {
+        self.path.replace("%", "%25").replace(" ", "%20")
+    }
+}
+
 impl FromStr for Uri {
     type Err = UriError;
 
@@ -55,6 +68,18 @@ impl FromStr for Uri {
             port,
             path: String::from(path),
         })
+    }
+}
+
+impl From<String> for Uri {
+    fn from(s: String) -> Self {
+        s.parse().unwrap()
+    }
+}
+
+impl From<&str> for Uri {
+    fn from(s: &str) -> Self {
+        s.parse().unwrap()
     }
 }
 

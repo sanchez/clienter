@@ -17,3 +17,12 @@ impl FromStr for Protocol {
         }
     }
 }
+
+impl Protocol {
+    pub fn get_default_port(&self) -> u16 {
+        match self {
+            Protocol::HTTP => 80,
+            Protocol::HTTPS => 443,
+        }
+    }
+}
