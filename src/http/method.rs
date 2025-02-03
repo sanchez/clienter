@@ -1,6 +1,6 @@
 use std::fmt::Write;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum HttpMethod {
     GET,
     POST,

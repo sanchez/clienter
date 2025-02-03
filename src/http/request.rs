@@ -1,12 +1,14 @@
 use std::io::{Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 
+use crate::utils::triple_split;
+
 use super::headers::HttpHeaders;
 use super::method::HttpMethod;
 use super::response::HttpResponse;
 use super::uri::Uri;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct HttpRequest {
     pub method: HttpMethod,
     pub uri: Uri,
@@ -19,6 +21,7 @@ pub struct HttpRequest {
 pub enum RequestError {
     InvalidUri,
     ConnectionFailed,
+    ResponseError,
     InternalError,
 }
 
@@ -36,7 +39,7 @@ impl HttpRequest {
         }
     }
 
-    pub fn execute(&self) -> Result<HttpResponse, RequestError> {
+    pub fn execute(self) -> Result<HttpResponse, RequestError> {
         let addr = self
             .uri
             .get_addr()
@@ -84,7 +87,19 @@ impl HttpRequest {
         write!(stream, "\r\n\r\n").map_err(|_| RequestError::InternalError)?;
         stream.flush().map_err(|_| RequestError::InternalError)?;
 
-        todo!()
+        let mut buffer = crate::internal::StreamBuffer::new(stream);
+
+        let status_line = buffer
+            .read_line()
+            .map_err(|_| RequestError::ResponseError)?;
+        let (http_verion, status, _) =
+            triple_split(&status_line, " ").ok_or(RequestError::ResponseError)?;
+        let status = status
+            .parse::<u16>()
+            .map_err(|_| RequestError::ResponseError)?;
+        let status = super::StatusCode::from(status);
+
+        Ok(HttpResponse { status })
     }
 }
 

@@ -18,6 +18,12 @@ where
     Some((left, right))
 }
 
+pub fn triple_split<'a>(s: &'a str, pat: &str) -> Option<(&'a str, &'a str, &'a str)> {
+    let (left, right) = tuple_split(s, pat)?;
+    let (middle, right) = tuple_split(right, pat)?;
+    Some((left, middle, right))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

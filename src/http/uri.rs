@@ -2,7 +2,7 @@ use std::{fmt::Debug, str::FromStr};
 
 use crate::utils;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Uri {
     pub protocol: super::protocol::Protocol,
     pub hostname: String,

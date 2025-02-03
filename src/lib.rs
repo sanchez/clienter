@@ -1,3 +1,5 @@
+mod internal;
+
 mod http;
 pub use http::*;
 
