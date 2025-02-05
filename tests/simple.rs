@@ -1,4 +1,4 @@
-use clienter::{HttpClient, HttpMethod, HttpRequest, StatusCode};
+use clienter::{HttpClient, HttpMethod, StatusCode};
 
 #[test]
 fn test_simple_request() {

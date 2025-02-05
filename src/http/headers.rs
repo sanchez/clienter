@@ -53,12 +53,14 @@ impl Default for HttpHeaders {
     fn default() -> Self {
         HttpHeaders {
             data: HashMap::from([
-                ("User-Agent".to_string(), "Clienter/1.0".to_string()),
+                ("User-Agent".to_string(), "Clienter/1.0 (Rust)".to_string()),
+                ("Accept".to_string(), "*/*".to_string()),
                 ("Accept-Language".to_string(), "en-US".to_string()),
                 ("Accept-Encoding".to_string(), "gzip".to_string()),
                 ("Connection".to_string(), "keep-alive".to_string()),
                 ("Upgrade-Insecure-Requests".to_string(), "1".to_string()),
                 ("Sec-Fetch-Dest".to_string(), "document".to_string()),
+                ("Host".to_string(), "localhost".to_string()),
             ]),
         }
     }
