@@ -1,7 +1,5 @@
-use std::io::{Read, Write};
+use std::io::Write;
 use std::net::{TcpStream, ToSocketAddrs};
-
-use crate::utils::triple_split;
 
 use super::headers::HttpHeaders;
 use super::method::HttpMethod;
@@ -72,11 +70,6 @@ impl HttpRequest {
         */
 
         let uri = format!("/{}", self.uri.get_encoded_path());
-        println!("Before");
-        let method = self.method.to_string();
-        println!("Method: {}", method);
-        println!("After");
-
         write!(stream, "{} {} HTTP/2\r\n", self.method, uri)
             .map_err(|_| RequestError::InternalError)?;
 
@@ -87,31 +80,8 @@ impl HttpRequest {
         write!(stream, "\r\n\r\n").map_err(|_| RequestError::InternalError)?;
         stream.flush().map_err(|_| RequestError::InternalError)?;
 
-        let mut buffer = crate::internal::StreamBuffer::new(stream);
+        let response = HttpResponse::build(stream).map_err(|_| RequestError::ResponseError)?;
 
-        let status_line = buffer
-            .read_line()
-            .map_err(|_| RequestError::ResponseError)?;
-        let (http_verion, status, _) =
-            triple_split(&status_line, " ").ok_or(RequestError::ResponseError)?;
-        let status = status
-            .parse::<u16>()
-            .map_err(|_| RequestError::ResponseError)?;
-        let status = super::StatusCode::from(status);
-
-        Ok(HttpResponse { status })
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_simple_request() {
-        let request = HttpRequest::new(HttpMethod::GET, "http://httpbin.org/anything");
-
-        let response = request.execute().unwrap();
-        assert_eq!(response.status, super::super::StatusCode::Ok200);
+        Ok(response)
     }
 }

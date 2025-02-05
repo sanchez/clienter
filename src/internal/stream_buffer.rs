@@ -29,4 +29,16 @@ impl StreamBuffer {
 
         Ok(buffer.trim().to_string())
     }
+
+    pub fn read_all(&mut self) -> Result<Vec<u8>, std::io::Error> {
+        let mut buffer = Vec::new();
+        self.stream.read_to_end(&mut buffer)?;
+        Ok(buffer)
+    }
+
+    pub fn read_all_string(&mut self) -> Result<String, std::io::Error> {
+        let mut buffer = String::new();
+        self.stream.read_to_string(&mut buffer)?;
+        Ok(buffer)
+    }
 }

@@ -1,5 +1,3 @@
-use std::fmt::Write;
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum HttpMethod {
     GET,
