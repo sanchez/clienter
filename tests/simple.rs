@@ -1,10 +1,11 @@
-use clienter::{HttpMethod, HttpRequest, StatusCode};
+use clienter::{HttpClient, HttpMethod, HttpRequest, StatusCode};
 
 #[test]
 fn test_simple_request() {
-    let request = HttpRequest::new(HttpMethod::GET, "http://httpbin.org/anything");
+    let client = HttpClient::new();
 
-    let mut response = request.execute().unwrap();
+    let request = client.request(HttpMethod::GET, "http://httpbin.org/anything");
+    let mut response = client.send(&request).unwrap();
     let body = response.body_as_string().unwrap();
     println!("Body: {}", body);
 

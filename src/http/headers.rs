@@ -12,6 +12,14 @@ impl HttpHeaders {
         }
     }
 
+    pub fn combine(&self, other: &HttpHeaders) -> HttpHeaders {
+        let mut data = self.data.clone();
+        for (key, value) in other.data.iter() {
+            data.insert(key.clone(), value.clone());
+        }
+        HttpHeaders { data }
+    }
+
     pub fn insert(&mut self, key: String, value: String) {
         self.data.insert(key, value);
     }

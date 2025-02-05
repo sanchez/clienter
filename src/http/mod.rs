@@ -1,3 +1,6 @@
+mod client;
+pub use client::HttpClient;
+
 mod headers;
 pub use headers::HttpHeaders;
 
@@ -18,7 +21,3 @@ pub use status_code::StatusCode;
 
 mod uri;
 pub use uri::Uri;
-
-struct HttpClient {}
-
-impl HttpClient {}

@@ -25,4 +25,11 @@ impl Protocol {
             Protocol::HTTPS => 443,
         }
     }
+
+    pub fn get_http_version(&self) -> &'static str {
+        match self {
+            Protocol::HTTP => "HTTP/1.1",
+            Protocol::HTTPS => "HTTP/2",
+        }
+    }
 }

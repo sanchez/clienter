@@ -1,9 +1,9 @@
-use clienter::{HttpMethod, HttpRequest};
+// use clienter::{HttpMethod, HttpRequest};
 
 pub fn main() {
-    let request = HttpRequest::new(HttpMethod::GET, "http://httpbin.org/anything");
+    // let request = HttpRequest::new(HttpMethod::GET, "http://httpbin.org/anything");
 
-    let _response = request.execute().unwrap();
+    // let _response = request.execute().unwrap();
 
     println!("Hello, world!");
 }
