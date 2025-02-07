@@ -6,6 +6,7 @@ Clienter is a project designed to manage client interactions and data efficientl
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Examples](#examples)
 - [License](#license)
 
 ## Installation
@@ -20,23 +21,58 @@ To install the project, follow these steps:
    ```sh
    cd clienter
    ```
-3. Install the dependencies:
+3. Build the project:
    ```sh
-   npm install
+   cargo build
    ```
 
 ## Usage
 
-To start the project, run:
+To run the project, use:
 
 ```sh
-npm start
+cargo run
 ```
 
-For development mode with hot reloading:
+To run the tests:
 
 ```sh
-npm run dev
+cargo test
+```
+
+## Examples
+
+Here are some examples of how to use the `clienter` library:
+
+### Simple GET Request
+
+```rust
+use clienter::{HttpClient, HttpMethod};
+
+fn main() {
+    let client = HttpClient::new();
+    let request = client.request(HttpMethod::GET, "http://httpbin.org/anything");
+    let mut response = client.send(&request).unwrap();
+    println!("Status: {}", response.status);
+    let body = response.body_as_string().unwrap();
+    println!("Body: {}", body);
+}
+```
+
+### POST Request with JSON Body
+
+```rust
+use clienter::{HttpClient, HttpMethod, HttpRequest};
+
+fn main() {
+    let client = HttpClient::new();
+    let mut request = client.request(HttpMethod::POST, "http://httpbin.org/post");
+    request.set_body(r#"{"key": "value"}"#);
+    let mut response = client.send(&request).unwrap();
+    println!("Status: {}", response.status);
+    let body = response.body_as_string().unwrap();
+    println!("Body: {}", body);
+}
 ```
 
 ## License
