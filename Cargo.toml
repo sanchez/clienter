@@ -1,6 +1,6 @@
 [package]
 name = "clienter"
-version = "0.1.0"
+version = "0.0.0"
 authors = ["github.com/sanchez"]
 edition = "2021"
 description = "A simple, lightweight, zero dependency, HTTP client for Rust"
