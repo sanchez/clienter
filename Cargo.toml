@@ -1,6 +1,14 @@
 [package]
 name = "clienter"
 version = "0.1.0"
+authors = ["github.com/sanchez"]
 edition = "2021"
+description = "A simple, lightweight, zero dependency, HTTP client for Rust"
+readme = "README.md"
+repository = "https://github.com/sanchez/clienter"
+homepage = "https://github.com/sanchez/clienter"
+license = "MIT"
+keywords = ["http"]
+categories = ["network-programming", "web-programming::http-client"]
 
 [dependencies]
