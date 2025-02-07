@@ -10,5 +10,6 @@ homepage = "https://github.com/sanchez/clienter"
 license = "MIT"
 keywords = ["http"]
 categories = ["network-programming", "web-programming::http-client"]
+exclude = [".vscode/*", ".github/*", "tests/*"]
 
 [dependencies]
