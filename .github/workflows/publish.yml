@@ -18,7 +18,8 @@ jobs:
 
       - name: Set Version
         run: |
-          export VERSION=${{ github.event.release.tag_name }}
+          export VERSION=${{ github.ref_name }}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           sed -i "s/0.0.0/$VERSION/g" Cargo.toml
 
       - name: Cache Cargo registry
