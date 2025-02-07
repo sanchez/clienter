@@ -6,20 +6,20 @@ pub fn tuple_split<'a>(s: &'a str, pat: &str) -> Option<(&'a str, &'a str)> {
     Some((left, right))
 }
 
-pub fn split<'a, const N: usize>(s: &'a str, pat: &str) -> Option<[&'a str; N]> {
-    let mut arr = [""; N];
+// pub fn split<'a, const N: usize>(s: &'a str, pat: &str) -> Option<[&'a str; N]> {
+//     let mut arr = [""; N];
 
-    let mut remainder = s;
-    for i in 0..(N - 1) {
-        let (left, right) = tuple_split(remainder, pat)?;
-        arr[i] = left;
-        remainder = right;
-    }
+//     let mut remainder = s;
+//     for i in 0..(N - 1) {
+//         let (left, right) = tuple_split(remainder, pat)?;
+//         arr[i] = left;
+//         remainder = right;
+//     }
 
-    arr[N - 1] = remainder;
+//     arr[N - 1] = remainder;
 
-    Some(arr)
-}
+//     Some(arr)
+// }
 
 pub fn tuple_split_parse<TLeft, TRight>(s: &str, pat: &str) -> Option<(TLeft, TRight)>
 where
