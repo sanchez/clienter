@@ -16,6 +16,7 @@
 ///
 /// # Examples
 /// ```
+/// # use clienter::utils::tuple_split;
 /// let s = "hello://world";
 /// let (left, right) = tuple_split(s, "://").unwrap();
 /// assert_eq!(left, "hello");
@@ -41,6 +42,7 @@ pub fn tuple_split<'a>(s: &'a str, pat: &str) -> Option<(&'a str, &'a str)> {
 ///
 /// # Examples
 /// ```
+/// # use clienter::utils::split;
 /// let s = "a:b:c";
 /// let [a, b, c] = split::<3>(s, ":").unwrap();
 /// assert_eq!(a, "a");
@@ -74,6 +76,7 @@ pub fn split<'a, const N: usize>(s: &'a str, pat: &str) -> Option<[&'a str; N]> 
 ///
 /// # Examples
 /// ```
+/// # use clienter::utils::tuple_split_parse;
 /// let s = "42:3.14";
 /// let (num, float): (i32, f64) = tuple_split_parse(s, ":").unwrap();
 /// assert_eq!(num, 42);
@@ -103,6 +106,7 @@ where
 ///
 /// # Examples
 /// ```
+/// # use clienter::utils::triple_split;
 /// let s = "a:b:c";
 /// let (a, b, c) = triple_split(s, ":").unwrap();
 /// assert_eq!(a, "a");

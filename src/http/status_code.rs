@@ -154,7 +154,7 @@ impl StatusCode {
     ///
     /// # Example
     /// ```
-    /// use crate::http::StatusCode;
+    /// use clienter::StatusCode;
     ///
     /// let status = StatusCode::Ok200;
     /// assert!(status.is_success());
@@ -190,7 +190,7 @@ impl TryFrom<u16> for StatusCode {
     ///
     /// # Example
     /// ```
-    /// use crate::http::StatusCode;
+    /// use clienter::StatusCode;
     ///
     /// let status = StatusCode::try_from(200).unwrap();
     /// assert_eq!(status, StatusCode::Ok200);
@@ -272,7 +272,7 @@ impl Display for StatusCode {
     ///
     /// # Example
     /// ```
-    /// use crate::http::StatusCode;
+    /// use clienter::StatusCode;
     ///
     /// let status = StatusCode::Ok200;
     /// assert_eq!(status.to_string(), "200 OK");

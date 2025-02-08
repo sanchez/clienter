@@ -7,7 +7,7 @@
 /// # Examples
 ///
 /// ```
-/// use clienter::http::HttpMethod;
+/// use clienter::HttpMethod;
 ///
 /// let method = HttpMethod::GET;
 /// assert_eq!(method.to_string(), "GET");

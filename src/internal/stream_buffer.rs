@@ -9,7 +9,7 @@ use std::{io::Read, net::TcpStream};
 ///
 /// # Examples
 ///
-/// ```
+/// ```ignore
 /// use std::net::TcpStream;
 ///
 /// let stream = TcpStream::connect("127.0.0.1:8080").unwrap();

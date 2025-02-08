@@ -6,7 +6,7 @@
 //! # Examples
 //!
 //! ```
-//! use clienter::http::Uri;
+//! use clienter::Uri;
 //!
 //! // Parse a basic HTTP URL
 //! let uri: Uri = "http://example.com/path".parse().unwrap();
@@ -27,7 +27,7 @@ use crate::utils;
 /// # Examples
 ///
 /// ```
-/// use clienter::http::Uri;
+/// use clienter::Uri;
 ///
 /// let uri: Uri = "http://api.example.com:8080/v1/users".parse().unwrap();
 /// assert_eq!(uri.get_addr(), "api.example.com:8080");
@@ -57,7 +57,7 @@ impl Uri {
     /// # Examples
     ///
     /// ```
-    /// use clienter::http::Uri;
+    /// use clienter::Uri;
     ///
     /// let uri: Uri = "http://example.com".parse().unwrap();
     /// assert_eq!(uri.get_addr(), "example.com:80"); // Default HTTP port
@@ -78,7 +78,7 @@ impl Uri {
     /// # Examples
     ///
     /// ```
-    /// use clienter::http::Uri;
+    /// use clienter::Uri;
     ///
     /// let uri: Uri = "http://example.com/path with spaces".parse().unwrap();
     /// assert_eq!(uri.get_encoded_path(), "path%20with%20spaces");
@@ -121,6 +121,10 @@ impl FromStr for Uri {
         } else {
             (String::from(hostname), None)
         };
+
+        if hostname.is_empty() {
+            return Err(UriError::InvalidHostname);
+        }
 
         Ok(Uri {
             protocol,

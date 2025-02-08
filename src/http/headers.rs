@@ -5,7 +5,7 @@
 //!
 //! # Example
 //! ```
-//! use clienter::http::HttpHeaders;
+//! use clienter::HttpHeaders;
 //!
 //! let mut headers = HttpHeaders::new();
 //! headers.set_user_agent("MyApp/1.0".to_string());

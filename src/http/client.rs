@@ -5,7 +5,7 @@
 //!
 //! # Example
 //! ```
-//! use clienter::http::{HttpClient, HttpMethod};
+//! use clienter::{HttpClient, HttpMethod};
 //!
 //! let client = HttpClient::new();
 //! let request = client.request(HttpMethod::GET, "http://example.com");
