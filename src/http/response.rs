@@ -82,6 +82,13 @@ impl HttpResponse {
             headers.insert(key.to_string(), value.to_string());
         }
 
+        // Check for a Content-Length header to set the total bytes to read
+        if let Some(content_length) = headers.get("Content-Length") {
+            if let Ok(content_length) = content_length.parse::<usize>() {
+                buffer.set_total_bytes(content_length);
+            }
+        }
+
         Ok(HttpResponse {
             status,
             headers,
