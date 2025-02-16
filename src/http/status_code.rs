@@ -1,75 +1,164 @@
+//! HTTP status codes as defined in RFC 7231, 6585, and others.
+//!
+//! This module provides a type-safe enumeration of HTTP status codes along with
+//! helpful methods for classification and conversion.
+
 use std::fmt::Display;
 
+/// Represents an HTTP status code.
+///
+/// The enum variants are named with their numerical value appended to make them unique
+/// and easily identifiable. For example, `Ok200` represents HTTP 200 OK status.
+///
+/// # Categories
+/// - 1xx: Informational responses
+/// - 2xx: Successful responses
+/// - 3xx: Redirection responses
+/// - 4xx: Client error responses
+/// - 5xx: Server error responses
 #[derive(Debug, PartialEq)]
 pub enum StatusCode {
+    /// 100 Continue
     Continue100,
+    /// 101 Switching Protocols
     SwitchingProtocols101,
+    /// 102 Processing
     Processing102,
+    /// 103 Early Hints
     EarlyHints103,
 
+    /// 200 OK
     Ok200,
+    /// 201 Created
     Created201,
+    /// 202 Accepted
     Accepted202,
+    /// 203 Non-Authoritative Information
     NonAuthoritativeInformation203,
+    /// 204 No Content
     NoContent204,
+    /// 205 Reset Content
     ResetContent205,
+    /// 206 Partial Content
     PartialContent206,
+    /// 207 Multi-Status
     MultiStatus207,
+    /// 208 Already Reported
     AlreadyReported208,
+    /// 226 IM Used
     ImUsed226,
 
+    /// 300 Multiple Choices
     MultipleChoices300,
+    /// 301 Moved Permanently
     MovedPermanently301,
+    /// 302 Found
     Found302,
+    /// 303 See Other
     SeeOther303,
+    /// 304 Not Modified
     NotModified304,
+    /// 305 Use Proxy
     UseProxy305,
+    /// 307 Temporary Redirect
     TemporaryRedirect307,
+    /// 308 Permanent Redirect
     PermanentRedirect308,
 
+    /// 400 Bad Request
     BadRequest400,
+    /// 401 Unauthorized
     Unauthorized401,
+    /// 402 Payment Required
     PaymentRequired402,
+    /// 403 Forbidden
     Forbidden403,
+    /// 404 Not Found
     NotFound404,
+    /// 405 Method Not Allowed
     MethodNotAllowed405,
+    /// 406 Not Acceptable
     NotAcceptable406,
+    /// 407 Proxy Authentication Required
     ProxyAuthenticationRequired407,
+    /// 408 Request Timeout
     RequestTimeout408,
+    /// 409 Conflict
     Conflict409,
+    /// 410 Gone
     Gone410,
+    /// 411 Length Required
     LengthRequired411,
+    /// 412 Precondition Failed
     PrecondiditionFailed412,
+    /// 413 Payload Too Large
     PayloadTooLarge413,
+    /// 414 URI Too Long
     UriTooLong414,
+    /// 415 Unsupported Media Type
     UnsupportedMediaType415,
+    /// 416 Range Not Satisfiable
     RangeNotSatisfiable416,
+    /// 417 Expectation Failed
     ExpectationFailed417,
+    /// 421 Misdirected Request
     MisdirectedRequest421,
+    /// 422 Unprocessable Entity
     UnprocessableEntity422,
+    /// 423 Locked
     Locked423,
+    /// 424 Failed Dependency
     FailedDependency424,
+    /// 425 Too Early
     TooEarly425,
+    /// 426 Upgrade Required
     UpgradeRequired426,
+    /// 428 Precondition Required
     PreconditionRequired428,
+    /// 429 Too Many Requests
     TooManyRequests429,
+    /// 431 Request Header Fields Too Large
     RequestHeaderFieldsTooLarge431,
+    /// 451 Unavailable For Legal Reasons
     UnavailableForLegalReasons451,
 
+    /// 500 Internal Server Error
     InternalServerError500,
+    /// 501 Not Implemented
     NotImplemented501,
+    /// 502 Bad Gateway
     BadGateway502,
+    /// 503 Service Unavailable
     ServiceUnavailable503,
+    /// 504 Gateway Timeout
     GatewayTimeout504,
+    /// 505 HTTP Version Not Supported
     HttpVersionNotSupported505,
+    /// 506 Variant Also Negotiates
     VariantAlsoNegotiates506,
+    /// 507 Insufficient Storage
     InsufficientStorage507,
+    /// 508 Loop Detected
     LoopDetected508,
+    /// 510 Not Extended
     NotExtended510,
+    /// 511 Network Authentication Required
     NetworkAuthenticationRequired511,
 }
 
 impl StatusCode {
+    /// Determines if the status code represents a successful response (2xx range).
+    ///
+    /// # Returns
+    /// `true` if the status code is in the 2xx range, `false` otherwise.
+    ///
+    /// # Example
+    /// ```
+    /// use clienter::StatusCode;
+    ///
+    /// let status = StatusCode::Ok200;
+    /// assert!(status.is_success());
+    /// ```
     pub fn is_success(&self) -> bool {
         match self {
             StatusCode::Ok200 => true,
@@ -90,6 +179,22 @@ impl StatusCode {
 impl TryFrom<u16> for StatusCode {
     type Error = &'static str;
 
+    /// Attempts to convert a u16 into a StatusCode.
+    ///
+    /// # Arguments
+    /// * `status_code` - The numerical status code to convert
+    ///
+    /// # Returns
+    /// * `Ok(StatusCode)` if the conversion succeeds
+    /// * `Err("Unknown status code")` if the status code is not recognized
+    ///
+    /// # Example
+    /// ```
+    /// use clienter::StatusCode;
+    ///
+    /// let status = StatusCode::try_from(200).unwrap();
+    /// assert_eq!(status, StatusCode::Ok200);
+    /// ```
     fn try_from(status_code: u16) -> Result<Self, Self::Error> {
         match status_code {
             100 => Ok(StatusCode::Continue100),
@@ -163,6 +268,15 @@ impl TryFrom<u16> for StatusCode {
 }
 
 impl Display for StatusCode {
+    /// Formats the status code as a string in the format "{code} {reason}".
+    ///
+    /// # Example
+    /// ```
+    /// use clienter::StatusCode;
+    ///
+    /// let status = StatusCode::Ok200;
+    /// assert_eq!(status.to_string(), "200 OK");
+    /// ```
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             StatusCode::Continue100 => write!(f, "100 Continue"),
