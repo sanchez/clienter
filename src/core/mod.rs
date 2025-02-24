@@ -7,6 +7,9 @@
 mod client;
 pub use client::HttpClient;
 
+mod error;
+pub use error::HttpError;
+
 /// HTTP headers management
 mod headers;
 pub use headers::HttpHeaders;

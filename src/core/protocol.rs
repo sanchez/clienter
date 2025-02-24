@@ -1,5 +1,7 @@
 use std::str::FromStr;
 
+use super::{HttpClient, HttpError, HttpRequest, HttpResponse};
+
 /// Represents HTTP protocol versions
 ///
 /// Supports both HTTP and HTTPS protocols, providing functionality
@@ -54,6 +56,15 @@ impl Protocol {
         match self {
             Protocol::HTTP => "HTTP/1.1",
             Protocol::HTTPS => "HTTP/2",
+        }
+    }
+
+    pub fn get_handler(
+        &self,
+    ) -> impl Fn(&HttpClient, &HttpRequest) -> Result<HttpResponse, HttpError> {
+        match self {
+            Protocol::HTTP => crate::handlers::handle_http,
+            Protocol::HTTPS => crate::handlers::handle_https,
         }
     }
 }
