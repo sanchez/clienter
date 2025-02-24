@@ -54,6 +54,17 @@ impl HttpHeaders {
         self.data.insert(key, value);
     }
 
+    /// Retrieves the value of a header by its key.
+    ///
+    /// # Parameters
+    /// * `key` - The header field name to look up
+    ///
+    /// # Returns
+    /// An Option containing a reference to the header value if it exists
+    pub fn get(&self, key: &str) -> Option<&String> {
+        self.data.get(key)
+    }
+
     /// Sets the Host header.
     pub fn set_host(&mut self, host: String) {
         self.insert("Host".to_string(), host);

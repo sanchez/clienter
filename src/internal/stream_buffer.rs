@@ -3,7 +3,10 @@
 //! This module implements line-by-line and complete content reading
 //! capabilities over TCP connections.
 
-use std::{io::Read, net::TcpStream};
+use std::{
+    io::{ErrorKind, Read},
+    net::TcpStream,
+};
 
 /// A buffered reader for TCP streams that provides convenient reading operations.
 ///
@@ -20,6 +23,8 @@ use std::{io::Read, net::TcpStream};
 /// ```
 pub struct StreamBuffer {
     stream: TcpStream,
+    bytes_read: usize,
+    total_bytes: Option<usize>,
 }
 
 impl StreamBuffer {
@@ -29,7 +34,49 @@ impl StreamBuffer {
     ///
     /// * `stream` - The TCP stream to wrap
     pub fn new(stream: TcpStream) -> Self {
-        StreamBuffer { stream }
+        StreamBuffer {
+            stream,
+            bytes_read: 0,
+            total_bytes: None,
+        }
+    }
+
+    /// Sets the total number of bytes expected to be read from the stream.
+    ///
+    /// This is useful when you know the content length in advance and want to
+    /// prevent reading beyond the expected data size.
+    ///
+    /// # Arguments
+    ///
+    /// * `total_bytes` - The total number of bytes that should be read from the stream
+    pub fn set_total_bytes(&mut self, total_bytes: usize) {
+        self.total_bytes = Some(total_bytes);
+    }
+
+    /// Reads a single byte from the stream.
+    ///
+    /// This is an internal helper method that maintains the bytes_read count
+    /// while reading individual bytes from the underlying TCP stream.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(u8)` - The byte that was read
+    /// * `Err(std::io::Error)` - If an I/O error occurs during reading
+    fn get_byte(&mut self) -> Result<u8, std::io::Error> {
+        // If we have already read past the max, no need to keep going
+        if let Some(total_bytes) = self.total_bytes {
+            if self.bytes_read >= total_bytes {
+                return Err(std::io::Error::new(
+                    ErrorKind::UnexpectedEof,
+                    "End of file reached",
+                ));
+            }
+        }
+
+        let mut buf = [0x00; 1];
+        self.stream.read_exact(&mut buf)?;
+        self.bytes_read += 1;
+        Ok(buf[0])
     }
 
     /// Reads a single line from the stream until a newline character is encountered.
@@ -44,14 +91,13 @@ impl StreamBuffer {
     pub fn read_line(&mut self) -> Result<String, std::io::Error> {
         let mut buffer = String::new();
 
-        let mut buf = [0x00; 1];
         loop {
-            let bytes = self.stream.read(&mut buf)?;
-            if bytes == 0 {
-                break;
-            }
+            let c = match self.get_byte() {
+                Ok(byte) => byte as char,
+                Err(err) if err.kind() == ErrorKind::UnexpectedEof => break,
+                Err(err) => return Err(err),
+            };
 
-            let c = buf[0] as char;
             if c == '\n' {
                 break;
             }
@@ -71,6 +117,14 @@ impl StreamBuffer {
     /// * `Ok(Vec<u8>)` - The bytes that were read
     /// * `Err(std::io::Error)` - If an I/O error occurs during reading
     pub fn read_all(&mut self) -> Result<Vec<u8>, std::io::Error> {
+        // If we know the length of the data, we only need to read that much and can close out the connection early
+        if let Some(total_bytes) = self.total_bytes {
+            let mut buffer = vec![0; total_bytes];
+            self.stream.read_exact(&mut buffer)?;
+            return Ok(buffer);
+        }
+
+        // We don't know how many bytes are left, we need to keep reading
         let mut buffer = Vec::new();
         self.stream.read_to_end(&mut buffer)?;
         Ok(buffer)
@@ -87,8 +141,10 @@ impl StreamBuffer {
     /// * `Err(std::io::Error)` - If an I/O error occurs during reading
     ///                           or if the data is not valid UTF-8
     pub fn read_all_string(&mut self) -> Result<String, std::io::Error> {
-        let mut buffer = String::new();
-        self.stream.read_to_string(&mut buffer)?;
-        Ok(buffer)
+        let bytes = self.read_all()?;
+        let s = std::str::from_utf8(&bytes)
+            .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))?
+            .to_owned();
+        Ok(s)
     }
 }
