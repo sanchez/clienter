@@ -1,5 +1,7 @@
 # Clienter
 
+> Please be warned, this is an experiment, I am playing. This library is so far away from being anything more than me just having fun. It doesn't even have full support for things like HTTPS or compression methods, etc
+
 Clienter is a project designed to manage client interactions and data efficiently. This README provides an overview of the project, how to set it up, and how to contribute.
 
 ## Table of Contents
